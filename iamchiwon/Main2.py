@@ -7,27 +7,23 @@ for n1 in range(10, 100):  # 분자
         if n1 >= n2: continue  # 분자가 분모보다 크거가 같은면 무시
         if n1 % 10 == 0 and n2 % 10 == 0: continue  # 진부한 경우 무시
 
-        # 처리 전 후 비교용 변수
-        f1 = Fraction(n1, n2)
-        f2 = Fraction()
+        f1 = Fraction(n1, n2)  # 처리 전
+        f2 = Fraction()  # 처리 후
 
-        # 문자로 바꿔놓고 처리한다
-        s1, s2 = str(n1), str(n2)
+        # 교집합으로 같은 숫자 찾기
+        s1, s2 = set(str(n1)), set(str(n2))
+        inter = set(s1) & set(s2)
+        if bool(inter) == False: continue  # 교집합 없으면 무시
 
         # 같은 숫자 제거
+        s1 -= inter
+        s2 -= inter
+        if bool(s1) == False or bool(s2) == False: continue  # 숫자가 남지 않으면 무시
+
         try:
-            if s1[0] == s2[0]:
-                f2 = Fraction(int(s1[1]), int(s2[1]))
-            elif s1[0] == s2[1]:
-                f2 = Fraction(int(s1[1]), int(s2[0]))
-            elif s1[1] == s2[0]:
-                f2 = Fraction(int(s1[0]), int(s2[1]))
-            elif s1[1] == s2[1]:
-                f2 = Fraction(int(s1[0]), int(s2[0]))
-            else:
-                continue
+            f2 = Fraction(int(list(s1)[0]), int(list(s2)[0]))
         except ZeroDivisionError:
-            continue
+            continue  # 0만 남는 경우 무시
 
         if f1 != f2: continue  # 값이 달라지면 무시
 
